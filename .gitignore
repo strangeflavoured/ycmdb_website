@@ -1,0 +1,13 @@
+**/logs
+**/__pycache__
+
+.*
+!/.gitignore
+
+*.pkl
+UpdateRELATIONcounters.*
+
+__init__.pyc
+app.db
+migrations/
+DataUpload/

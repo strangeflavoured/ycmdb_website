@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block add_styles %}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.css') }}"/>
+{% endblock %}
+
+{% block add_script %}
+	<script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='script/meta.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+	<div class="col-12">
+		<div class="panel-body">
+			{{ table|safe }}
+		</div>
+	</div>
+{% endblock %}

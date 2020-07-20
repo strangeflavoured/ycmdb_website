@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block add_script %}
+	<script id="strainInfo" type="text/javascript" src="{{ url_for('static', filename='script/strain_info.js') }}" csrf-token="{{ csrf_token() }}" selected-id="{{ selectedId }}" redirect-url="{{ url_for('main.redirectStrain') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+	<h2> Strain Information: {{ strain["strainId"] }} </h2><hr>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2">
+				<h3>Ploidity</h3>
+				{% if strain["ploidity"] %}
+					{{ strain["ploidity"] }}
+				{% else %}
+					<div style="color: grey;">
+						Not specified
+					</div>	
+				{% endif %}
+			</div>
+			<div class="col-sm-2">
+				<h3>Mating Type</h3>
+				{% if strain["mating_type"] %}
+					{{ strain["matingType"] }}
+				{% else %}
+					<div style="color: grey;">
+						Not specified
+					</div>					
+				{% endif %}
+			</div>
+			<div class="col-sm-4">
+				<h3>Mutations</h3>
+				{% if strain["mutations"] %}
+					{{ strain["mutations"] }}
+				{% else %}
+					<div style="color: grey;">
+						Not specified
+					</div>	
+				{% endif %}
+			</div>
+			<div class="col-sm-4">
+				<h3>Link</h3>
+				{% if strain["link"] %}
+					<a target='_blank' rel='noopener noreferrer' href="{{ strain['link'] }}">{{ strain["link"] }}</a>
+				{% else %}
+					<div style="color: grey;">
+						None
+					</div>	
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<br>    
+	<div class="panel-body">
+		<h3>YCMD contains the following data points from this strain:</h3> 
+		{{ entries|safe }}
+	</div>       
+	<br>
+	
+	<div id="ancestry_chart">
+		<h3>Ancestry:</h3>
+		<span class="help-block">
+			The closest ancestor of the currently selected strain is highlighted. Click bold strains to get more information in a new window.
+		</span>
+		<div class="svg">    	
+			{{ scheme|safe }}
+		</div>
+	</div>
+{% endblock %}

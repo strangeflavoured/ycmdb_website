@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<h1>Welcome to YCMD!</h1>
+<h2>Curated yeast data for mathematical modeling</h2><hr>
+<h3>
+	YCMD collects, annotates and categorizes published data on yeast physiology along with its experimental context to provide a quantitative resource for cellular modelling
+</h3><br>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-3">
+			<span>
+				Information on metabolites such as concentrations, uptake and secretion rates:
+			</span><br><br>
+			<a style="color: #4c72b0" href="{{ url_for('main.data', category='metabolic') }}"> >> Metabolic Data</a>			
+		</div>						
+		<div class="col-sm-5">
+			<span>
+				Information on the processes of translation and transcription such as mRNA and protein abundances, synthesis rates, translation initiation probabilities:
+			</span><br><br>
+			<a style="color: #dd8452" href="{{ url_for('main.data', category='proteomic') }}"> >> Genomic Data</a>			
+		</div>
+		<div class="col-sm-4">
+			<span>
+				General information on yeast cell pysiology such as cell sizes, densities, composition, cell cycle phases:
+			</span><br><br><br>
+			<a style="color: #55a868" href="{{ url_for('main.data', category='biophysical') }}"> >> Biophysical Data</a>	
+		</div>						
+	</div>
+</div>
+<br>
+<div class="svg">
+	{{ stats|safe }}
+</div>
+{% endblock %}

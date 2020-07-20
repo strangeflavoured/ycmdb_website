@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+	<h2> Publication Information: {{ title }} </h2><hr>
+
+  <span class="help-block">{{ publication["PublicationInfo"] }}</span>
+	<h3>{{ publication["Title"] }}</h3>
+	<span style="font-size: large">{{ publication["Authors"] }}</span><br>
+	<span class="help-block">{{ publication["Affiliation"] }}</span>
+  <span>
+    {% if "DOI" in publication["Crossref"].keys() %}
+      DOI: <a target='_blank' rel='noopener noreferrer' href="https://dx.doi.org/{{ publication['Crossref']['DOI'] }}">{{ publication['Crossref']['DOI'] }} </a>
+    {% endif %}
+    {% if "doi" in publication["Crossref"].keys() %}
+      DOI: <a target='_blank' rel='noopener noreferrer' href="https://dx.doi.org/{{ publication['Crossref']['doi'] }}">{{ publication['Crossref']['doi'] }} </a>
+    {% endif %}
+    {% if "PMID" in publication["Crossref"].keys() %}
+      PMID: <a target='_blank' rel='noopener noreferrer' href="https://pubmed.ncbi.nlm.nih.gov/{{ publication['Crossref']['PMID'] }}/">{{ publication['Crossref']['PMID'] }} </a>
+    {% endif %}
+  </span><br><br>
+  <span style="font-size: large; font-weight: bold;">Abstract:</span><br>
+	<span style="font-size: large">{{ publication["Abstract"] }}</span><br><br>
+
+  <br>
+  <h3>YCMD contains the following data points from this publication:</h3> 
+  <div class="panel-body">    
+    {{ entries|safe }}
+  </div>
+  <br>
+  
+  <div id="publication_plot">
+    <h3>Other Publications in Database:</h3>
+    <span class="help-block">
+          Dots represent individual publications. Current publication is highlighted.
+        </span>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="svg col-sm-8">        
+        {{ RelPlot|safe }}
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+Dear {{ user.name }},
+
+To confirm your email click on the following link:
+
+{{ url_for('auth.confirm_email', token=token, _external=True) }}
+
+The link is valid for 30 minutes. If you did not register simply ignore this message.
+
+Sincerely,
+
+The YCMD Team

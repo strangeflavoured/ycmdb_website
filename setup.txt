@@ -1,0 +1,28 @@
+How to setup the flask environment
+
+set up virtual environment (if not setup):
+	python3 -m venv ..
+
+source virtual environment
+	source ../bin/activate
+
+install required packages:
+	pip install -r requirements.txt
+
+get installed packages and save them (if packages change)
+	pip freeze > requirements.txt
+
+update user db:
+	flask db init --multidb (if db does not exist)
+	flask db migrate -m "comment" (if changes in model/models.py were made)
+	flask db upgrade (if changes in model/models.py were made)
+
+
+Finally, run app (development mode only)
+	flask run
+
+Production:
+decide on a production server configuration, e.g. gunicorn
+generate secret key:
+	python -c "import uuid; print(uuid.uuid4().hex)"
+replace sqlite with mysql using pymysql

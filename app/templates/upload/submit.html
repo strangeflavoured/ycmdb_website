@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% if user and confirmed %}
+
+	{% block add_styles %}
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.css') }}"/>
+	{% endblock %}
+
+	{% block add_script %}
+		<script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='jquery-validation-1.19.2/dist/jquery.validate.js') }}"></script>
+		<script id="renderSubmit" type="text/javascript" src="{{ url_for('static', filename='script/submit.js') }}" csrf-token="{{ csrf_token() }}" check-time="{{ url_for('upload.checkTime') }}" auto-fill="{{ url_for('upload.fillSubmit') }}" upload-template="{{ url_for('upload.uploadTemplate') }}" download-current="{{ url_for('upload.downloadCurrent', data='') }}" process-files="{{ url_for('upload.processSubmission') }}"></script>
+	{% endblock %}
+	
+{% endif %}
+
+{% block app_content %}
+	{% if user %}
+		{% if confirmed %}
+	    	<h2>Data Submission</h2>
+	    	<hr>
+	    	<h5>
+	    		You are very welcome to submit your own data to YCMD!
+	    	</h5>
+	    	<h5>
+		    	To do so your dataset has to be equipped with all required meta-information, such as units, strain identity, culture conditions, synchronization method (if applicable), measurement techniques and others. For each data type there is a set of requested information (i.e. columns) that is required. Example tables for each data type can be downloaded below.
+		    </h5>
+	    	<h5>
+		    	You can download and save the entered information at any point (at the bottom of this page). If you want to continue working on your dataset you can upload the file again, also to reuse the meta information if you want to submit several data tapes for the same experiment.
+		    </h5>
+	    	<hr>
+	    	<form action="{{ url_for('upload.submit') }}" method="post" class="form" role="form" name="submit_data">
+	    		{{ form.hidden_tag() }}
+		    	<h3>
+		    		General and/or publication information
+		    	</h3>
+		    	<br>
+		    	<span class="help-block">
+		    		Please enter contact information and an Identifier for you data set.
+		    	</span>
+		    	<div class="row">
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.DataSetName) }}
+		    		</div>
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.DataSetContact) }}
+		    		</div>
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.DataSetPublication) }}
+		    		</div>
+		    	</div>
+		    	<hr>
+		    	<h3>
+		    		Strain Information
+		    	</h3>
+		    	<span>
+		    		You can either select a strain that is already in YCMD (please carefully check the strain information to see if it is the strain you used). Or you can enter a new strain and provide all the required information on it (ploidity, mating type, mutations, any further information concerning ancestry or the genotype).
+		    	</span>
+		    	<div>
+		    		<div class="row">
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.StrainSelected) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.StrainName) }}
+			    		</div>
+			    		<div class="col-sm-2">
+			    			{{ wtf.form_field(form.strain_ploidity) }}
+			    		</div>
+			    		<div class="col-sm-2">
+			    			{{ wtf.form_field(form.strain_mating_type) }}
+			    		</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="col-sm-6">
+			    			{{ wtf.form_field(form.strain_mutations) }}
+			    		</div>		    		
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.strain_comment) }}
+			    		</div>
+			    		<div class="col-sm-2">
+			    			{{ wtf.form_field(form.strain_link) }}
+			    		</div>
+			    	</div>
+		    	</div>
+		    	<hr>
+		    	<h3>Medium Information</h3>
+		    	<div class="row">
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.MediumSelected) }}
+		    		</div>
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.Medium_Name) }}
+		    		</div>
+		    		<div class="col-sm-4">
+		    			{{ wtf.form_field(form.Medium_pH) }}
+		    		</div>
+		    	</div>
+
+		    	<span class="help-block">
+		    		Your medium contains the following components:
+		    	</span>
+		    	<div class="panel-body">
+					<table border="True" class="dataframe table table-striped table-bordered table-hover table-fixed" id="medium_composition">
+					  <thead>
+					    <tr style="text-align: right;">
+					      <th>Component</th>
+					      <th>PubChem</th>
+					      <th>Value</th>
+					      <th>Unit</th>
+					    </tr>
+					  </thead>
+					  <tbody>				    
+					  </tbody>
+					</table>				
+				</div>
+				<div>
+					<input type="hidden" name="Medium_provided" id="Medium_provided">					
+				</div>
+		    	<div class="row">
+		    		<div class="col-sm-2">
+		    			{{ wtf.form_field(form.Medium_CompoundSelected) }}
+		    		</div>
+		    		<div class="col-sm-2">
+		    			{{ wtf.form_field(form.Medium_CompoundName) }}
+		    		</div>
+		    		<div class="col-sm-2">
+		    			{{ wtf.form_field(form.Medium_CompoundPubChemID) }}
+		    		</div>
+		    		<div class="col-sm-2">
+		    			{{ wtf.form_field(form.Medium_Value) }}
+		    		</div>
+		    		<div class="col-sm-2">
+		    			{{ wtf.form_field(form.Medium_Unit) }}
+		    		</div>	    		
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<button style="margin-top: 5px;" class="btn btn-default" id="addCompound" name="addCompound" type="button" disabled>Add Component</button>
+		    		</div>	    		
+		    	</div>
+		    	<hr>
+		    	<h3>
+		    		Cultivation Information
+		    	</h3>
+		    	<span class="help-block">
+		    		Please enter details for the cultivation of the cells.
+		    	</span>
+		    	<div>
+		    		<div class="row">
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.Synchronised) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.Temperature) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.GrowthPhase) }}
+			    		</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.GrowthRate) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.Aeration) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.CultureType) }}
+			    		</div>
+			    	</div>
+		    	</div>
+		    	<hr>
+		    	<h3>Measurement method information</h3>
+		    	<span class="help-block">
+		    		Please enter details for the measurement method. Please provide reasonable units!
+		    	</span>
+		    	<div>
+		    		<div class="row">
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.MethodName) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.Unit) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.ValueType) }}
+			    		</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.IsTimeResolved) }}
+			    		</div>
+			    		<div class="col-sm-4">
+			    			{{ wtf.form_field(form.UnitTime) }}
+			    		</div>
+			    	</div>
+		    	</div>
+		    	<hr>
+		    	<h3>Data points</h3>
+		    	<span class="help-block">
+		    		Select a type of data that you want to add below, you can then download a csv template with all required columns to fit your data.
+		    	</span>
+		    	<div class="row">
+		    		<div class="col-sm-5">
+		    			{{ wtf.form_field(form.DataTypes) }}
+		    		</div>
+		    		<div class="col-sm-5">
+		    			<label>
+		    				Please use this primaryIdentifier for your data points:
+		    			</label><br>
+		    			<p id="primary_identifier" style="margin-top: 5px;">{{ defDtype }}</p>		    	
+		    		</div>
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<a style="margin-top: 5px;" target='_blank' rel='noopener noreferrer' href="{{ url_for('upload.downloadTemplate') }}" class="btn btn-default" id="getTemplate" name="getTemplate" type="button">Download Template</a>
+		    		</div>
+		    	</div>
+		    	<span class="help-block">
+		    		Please fit your data in the downloaded template and try to fill in all columns. You can upload the filled file in csv format:
+		    	</span>
+		    	<div class="row">
+		    		<div class="col-sm-4">
+		    			<label>Choose file (.csv)</label>
+		    			<input type="file" name="uploadData" id="uploadData" class="sr-only" accept="text/csv">
+		    			<div class="input-group mb-3">
+						 	<input id="pretty-input" name="pretty-input" class="form-control" type="text" onclick="$('#uploadData').click();">
+							<div class="input-group-btn">
+								<button id="pretty-button" class="btn btn-outline-secondary" onclick="$('#uploadData').click();" type="button">Browse</button>
+							</div>
+						</div>
+		    		</div>
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<button style="margin-top: 5px;" class="btn btn-default" id="addData" name="addData" type="button">Upload filled Template</button>
+		    		</div>
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<button style="margin-top: 5px;" class="btn btn-default" id="removeData" name="removeData" type="button" disabled="true">Delete uploaded Template</button>
+		    		</div>
+		    	</div><br>
+		    	<span id="uploadSpan" class="help-block" style="display: none;">
+		    		You uploaded the following data:
+		    	</span>
+		    	<div id= "uploadPanel" class="panel-body" style="display: none;">
+		    		<table border="True" class="dataframe table table-striped table-bordered table-hover table-fixed" id="uploadedDataTable">
+		    		</table>
+		    	</div>
+		    	<div>
+					<input type="hidden" name="Data_provided" id="Data_provided">
+				</div>
+		    	<hr>
+		    	<h3>Submit the dataset</h3>
+		    	<span class="help-block">
+			    	By hitting the submit button, your data will be send to the YCMD. We check if all necessary meta information are provided and will get in contact with you if anything is missing or unclear or when your data has been uploaded to YCMD.		    	
+			    </span>
+			    <span class="help-block">
+			    	Please check the entered data before hitting submit, once submitted data cannot be changed via this form. Keep in mind that for security reasons after a successful submit you have to wait five minutes for a second submit, but you can begin entering data immediately.
+			    </span>			    
+			    <div class="row">
+			    	<div class="col-sm-2">
+			    		<br>
+				    	{{ wtf.form_field(form.submit) }}
+				    </div>
+				    <div>
+				    	<input type="hidden" name="check_time" id="check_time" value="true">
+				    </div>
+				    <div id="submissionErrors" class="col-sm-6 errors" hidden></div>
+				    {% if submittedAs %}
+				    	<div class="col-sm-5">
+				    	 	<span class="help-block">
+				    	 		Your dataset was submitted as:
+				    	 	</span>
+			                {{ submittedAs }}
+				    	</div>
+				    {% endif %}
+			    </div>
+			    <hr>
+			    <h3>
+			    	Down- and upload entered data or reset the form
+			    </h3>
+			    <span class="help-block">
+			    	You can download and save the entered information at any point by hitting the 'Download current data' button. If you want to continue working on your dataset you can upload the file again, also to reuse the meta information if you want to submit several data types for the same experiment. If you want to enter a new/different experiment, you can reset the entire form.
+			    </span>
+			    <span class="help-block">
+			    	When reuploading Data please check if everything is complete. In order for this functionality to work properly please be careful about special characters. Please don't use "&&"
+			    </span>
+			    <div class="row">
+			    	<div class="col-sm-3">
+			    		<br>
+			    		<a style="margin-top: 5px;" target='_blank' rel='noopener noreferrer' href="#" class="btn btn-default" id="getCurrent" name="getCurrent" type="button">Download Current Data</a>
+			    	</div>			    	
+		    		<div class="col-sm-4">
+		    			<label>Choose file (.txt)</label>
+		    			<input type="file" name="reloadCurrent" id="reloadCurrent" class="sr-only" accept="text/txt">
+		    			<div class="input-group mb-3">
+						 	<input id="pretty-input-2" name="pretty-input-2" class="form-control" type="text" onclick="$('#reloadCurrent').click();">
+							<div class="input-group-btn">
+								<button id="pretty-button-2" class="btn btn-outline-secondary" onclick="$('#reloadCurrent').click();" type="button">Browse</button>
+							</div>
+						</div>
+		    		</div>
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<button style="margin-top: 5px;" class="btn btn-default" id="addCurrent" name="addCurrent" type="button">Fill in unsubmitted data</button>
+		    		</div>
+		    		<div class="col-sm-2">
+		    			<br>
+		    			<button style="margin-top: 5px;" class="btn btn-danger" id="clearData" name="clearData" type="button">Reset Form</button>
+		    		</div>
+			    </div>
+			</form>
+		{% else %}
+			Please <a href="{{ url_for('auth.resendConfirmation') }}">confirm your E-mail adress</a> first.
+		{% endif %}
+	{% else %}
+		<p>Please <a href="{{ url_for('auth.login') }}">log in</a> first.</p><br>
+		<p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h2>Delete Account</h2>
+    	<div class="row">
+			<div class="col-md-6">
+				<form action="" id="delete_form" method="post" class="form" role="form" onsubmit="return confirm('Are you sure you want to delete your account? It cannot be undone.');">
+					<div class="form-group required">
+						{{ wtf.form_field(form.password) }}
+					</div>
+					{{ wtf.form_field(form.submit, class='btn btn-danger') }}
+				</form>				
+			</div>
+		</div>
+{% endblock %}

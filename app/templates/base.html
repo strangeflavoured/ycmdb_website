@@ -1,0 +1,93 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"/>
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"/>
+	{% block add_styles %}
+	{% endblock %}
+	{{ super() }}
+{% endblock %}
+
+
+
+{% block scripts %}
+	{{ super() }}	
+	{% block add_script %}
+	{% endblock %}	
+{% endblock %}
+
+{% block title %}
+	YCMD
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default fixed-top" id="mainNav">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>			
+				<a class="navbar-brand" href="{{ url_for('main.index') }}" title="Home"><img src="/static/images/LogoYCMD3.png" alt="YCMD"></a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					{% for tab in navigation %}
+						{% if tab in ["metabolic", "biophysical", "proteomic"] %}
+							<li><a style="{% if tab==category %}background-color:#b1aeae{% else %}background-color:#dbd9d8{% endif %}" href="{{ url_for('main.data', category=tab) }}">{{ tab.capitalize() }}</a></li>
+						{% else %}
+							<li><a style="{% if tab==category %}background-color:#b1aeae{% else %}background-color:#dbd9d8{% endif %}" href="{{ url_for('main.'+ tab) }}">{{ tab.capitalize() }}</a></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a style="{% if category=='submit' %}background-color:#b1aeae{% else %}background-color:#dbd9d8{% endif %}" href="{{ url_for('upload.submit') }}">Submit</a></li>
+					{% if current_user.is_anonymous %}				
+						<li><a href="{{ url_for('auth.login') }}">Login</a></li>
+					{% else %}								
+						<li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" href="#" title="Settings" role="button" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="{{ url_for('auth.changePassword') }}">Change Password</a></li>
+								{% if not confirmed %}
+									<li><a href="{{ url_for('auth.resendConfirmation') }}">Resend Confirmation</a></li>
+								{% endif %}
+								{% if admin %}
+									<li><a href="{{ url_for('stats.refreshContent') }}">Refresh Content</a></li>
+								{% endif %}
+								<li><a href="{{ url_for('auth.deleteAccount') }}">Delete Account</a></li>
+							</ul>
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	{% block subnav %}
+	{% endblock %}
+	
+	{% block sidebar %}
+	{% endblock %}
+{% endblock %}
+
+{% block content %}
+	<div class="container" id="main">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+				{% for category, message in messages %}
+				<div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+
+		{# application content needs to be provided in the app_content block #}
+		{% block app_content %}
+		{% endblock %}
+	</div>
+	
+	<footer style="margin: 30px 50px; text-align: center; color: gray;">&copy; <script>document.write(new Date().getFullYear())</script> TBP</footer>
+{% endblock %}

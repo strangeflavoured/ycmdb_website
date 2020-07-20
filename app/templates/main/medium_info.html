@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block add_styles %}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.css') }}"/>
+{% endblock %}
+
+{% block add_script %}
+	<script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
+	<script id="mediumInfo" type="text/javascript" src="{{ url_for('static', filename='script/medium_info.js') }}" csrf-token="{{ csrf_token() }}"></script>
+{% endblock %}
+
+{% block app_content %}
+	<h2> Medium Information: {{ title }} </h2><hr>	
+	<div class="table-responsive">
+		<h3>Composition</h3>
+		{% if pH %}
+			<h5>Medium pH: {{ pH }}</h5>
+		{% else %}
+			<h5>Medium pH: Not specified</h5>
+		{% endif %}
+		<div class="panel-body">
+			{{ table|safe }}
+		</div>
+	</div>
+	<div class="panel-body">
+    	<h3>YCMD contains the following data points from this medium:</h3> 
+    	{{ entries|safe }}
+    </div>
+	<br>
+  
+	
+  <div id="medium_plot">    
+  	<h3>Similarity to other media in YCMDB:</h3>
+    <div class="row">
+      <div class="col-sm-8">
+      	<span class="help-block">
+      		Dots represent individual media which contain selected compound. Current medium is highlighted. Select a closeby dot to see a similar medium.
+      	</span>
+      </div>
+      <div class="col-sm-4">
+      	{{ wtf.quick_form(form) }}	
+      </div>      
+    </div>
+    <div class="row">
+    	<div class="col-sm-2"></div>
+    	<div class="col-sm-8">
+    		<div class="svg">
+  				{{ RelPlot|safe }}      		
+  			</div>
+    	</div>
+    	<div class="col-sm-2"></div>
+    </div>    
+  </div>
+{% endblock %}
