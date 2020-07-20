@@ -11,3 +11,4 @@ __init__.pyc
 app.db
 migrations/
 DataUpload/
+jquery-validation-1.19.2/
