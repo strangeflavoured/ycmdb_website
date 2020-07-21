@@ -1,14 +1,24 @@
 //get parameters from template
 var script_tag = document.getElementById('resultTable');
 var searchFor = script_tag.getAttribute("search");
+var selection = JSON.parse(script_tag.getAttribute("selection"));
 
 //init datatable
 var table=$('#results_table').DataTable({
-	dom: "<'row'<'col-sm-6'i><'col-sm-6'f>><'row'<'col-sm-6'l><'col-sm-6'p>>RSrt<'bottom'><'row'<'col-sm-6'B><'col-sm-6'p>>",
+	columnDefs: [
+		{targets: selection, visible: true},
+		{targets: '_all', visible: false}
+		],
+	dom: "<'row'<'col-sm-6'i><'col-sm-6'f>><'row'<'col-sm-4'l><'col-sm-3'B><'col-sm-5'p>>RSrt<'bottom'><'row'<'col-sm-7'><'col-sm-5'p>>",
 	buttons: [
 		{
+			extend: "colvis",
+			text: "Select Columns",
+			columns: ":gt(0)"
+		},
+		{
             extend: 'csv',
-            text: "<span class='glyphicon glyphicon-download-alt'></span>",
+            text: "<span title='Download CSV' class='glyphicon glyphicon-download-alt'></span>",
             modifier :{
             	selected: true
             }
@@ -27,6 +37,11 @@ var table=$('#results_table').DataTable({
 	scrollX: true,
 	select: true,
 	autoWidth: true
+});
+
+//adjust colwidth if column selection changes
+$('#results_table').on('column-visibility.dt', function () {
+    table.columns.adjust();
 });
 
 //customise search filter

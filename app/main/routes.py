@@ -3,7 +3,7 @@ from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user
 import pandas as pd
 pd.options.mode.chained_assignment=None
-import re, os
+import re, os, sys, json
 
 from app import db
 from app.main import bp
@@ -36,38 +36,34 @@ def data(category):
 
 	return render_template("main/data_start.html", title=title, admin=userIsAdmin(), parent=parent, navigation=navigation, active=False, category=category, Tables=Tables, TableDisplay=TableDisplay, confirmed=userConfirmed())
 
-@bp.route('/data/<category>/result', methods=["GET","POST"])
+@bp.route('/data/<category>/result')
 def results(category):
-	activeTable=request.args.get("table", type=str)	
-	selectionList=request.args.getlist("select")
-	searchFor=request.args.get("search", "", type=str)	
-	if len(selectionList)==0:
-		selectionDefault=navigationTabs[category]["default"].copy()
-		selectionDefault[3:3]=primaryIdentifier[activeTable]
-		selectionList = selectionDefault
-	if request.method=="POST":
-		return redirect(url_for("main.results", category=category, table=activeTable, select=request.form.getlist("select")))
-	else:
-		try:
-			Tables=navigationTabs[category]["tables"].copy()
-			TableDisplay=navigationTabs[category]["display"].copy()
-		except KeyError:
-			Tables=False
-			TableDisplay=None	
-		
-		#result settings		
-		choices=[(col, displayColumnNames[col]) for col in TableColumns[activeTable]]
-		form=FilterResultsForm(choices, selectionList)
-		form.process()
-		
-		#get table from db
-		searchTable = pd.read_sql_query(f"select * from {activeTable}", db.get_engine(bind="data")).fillna("")
-		
-		#filter, select cols to display, convert to html
-		displayTable=searchTable.filter(items=selectionList)
-		tableHtml=processResults(displayTable, selectionList)
+	activeTable=request.args.get("table", type=str)
+	searchFor=request.args.get("search", "", type=str)
 
-		return render_template("main/data_result.html", admin=userIsAdmin(), search=searchFor, category=category, navigation=navigation, Tables=Tables, active=activeTable, table=tableHtml, TableDisplay=TableDisplay, confirmed=userConfirmed(), form=form) 
+	selectionList=navigationTabs[category]["default"].copy()
+	selectionList[3:3]=primaryIdentifier[activeTable]
+	
+	try:
+		Tables=navigationTabs[category]["tables"].copy()
+		TableDisplay=navigationTabs[category]["display"].copy()
+	except KeyError:
+		Tables=False
+		TableDisplay=None	
+	
+	#result settings		
+	choices=[(col, displayColumnNames[col]) for col in TableColumns[activeTable]]
+	form=FilterResultsForm(choices, selectionList)
+	form.process()
+	
+	#get table from db
+	dataTable = pd.read_sql_query(f"select * from {activeTable}", db.get_engine(bind="data")).fillna("")
+	numericSelection=[0]+[i+1 for i, elem in enumerate(dataTable.columns) if elem in selectionList]
+
+	#filter, select cols to display, convert to html
+	tableHtml=processResults(dataTable)
+
+	return render_template("main/data_result.html", selection=json.dumps(numericSelection), admin=userIsAdmin(), search=searchFor, category=category, navigation=navigation, Tables=Tables, active=activeTable, table=tableHtml, TableDisplay=TableDisplay, confirmed=userConfirmed(), form=form) 
 
 @bp.route('/strains')
 def strains():
@@ -126,6 +122,7 @@ def mediumInfo():
 		Medium=pd.read_sql_query(f"select Component, PubChem, Value, Unit from META_MediumComposition where Medium_uniqueID='{mediumMetaId}'", db.get_engine(bind="data")).fillna("")
 		entries=pd.read_sql_query(f"select {', '.join(relTables)} from RELATION_Medium WHERE Medium_ID = '{mediumId}'", db.get_engine(bind="data")).fillna("")
 		
+		#print(Medium["Component"], file=sys.stdout)
 		#process data fro display
 		tableHtml=processResults(Medium, tableId="medium_composition")
 		entriesHtml=processRel(entries, tableId="medium_entries", searchId=mediumId)

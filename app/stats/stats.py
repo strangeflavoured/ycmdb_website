@@ -3,7 +3,6 @@ import re
 from flask import url_for, flash, current_app
 import numpy as np
 from lxml import etree
-import sys
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -159,15 +158,7 @@ def makeMediumPlotAndConversion():
 def MediumPlot(tsne_result, outmatrix_wide, medium_ID_selected, compound_selected):
 	#number of compounds in all media
 	ncompounds = outmatrix_wide.count(axis=1)
-
-	if compound_selected!="all":
-		# selected compond for color mapping
-		concentration = outmatrix_wide[compound_selected]
-		minConc=np.amin(concentration)
-		maxConc=np.amax(concentration)
-		meanConc=np.mean(concentration)
-		norm=colours.LogNorm(vmin=minConc, vmax=maxConc)
-
+	
 	# selected medium ( from dropdown above)
 	selected = outmatrix_wide.index == medium_ID_selected
 

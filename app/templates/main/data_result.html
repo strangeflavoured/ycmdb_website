@@ -6,12 +6,12 @@
 
 {% block add_script %}
 	<script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.js') }}"></script>
-	<script id="resultTable" type="text/javascript" src="{{ url_for('static', filename='script/data_result.js') }}" search="{{ search }}"></script>
+	<script id="resultTable" type="text/javascript" src="{{ url_for('static', filename='script/data_result.js') }}" search="{{ search }}" selection="{{ selection }}"></script>
 {% endblock %}
 
 {% block sidebar_content %}
 	<div class="collapse in multi-collapse" aria-expanded="true" id="sidebar_toggle" style="margin-top: -15px; margin-left: 5px; position: absolute; z-index: 5">
-		<button class="btn btn-secondary-outline" type="button" data-toggle="collapse" data-target=".multi-collapse"  aria-expanded="false" aria-controls="filterSidebar sidebar_toggle" style="background-color: #f4f2f1;"><span class="glyphicon glyphicon-filter"></span></button>
+		<button title="Select columns to display" class="btn btn-secondary-outline" type="button" data-toggle="collapse" data-target=".multi-collapse"  aria-expanded="false" aria-controls="filterSidebar sidebar_toggle" style="background-color: #f4f2f1;"><span class="glyphicon glyphicon-filter"></span></button>
 	</div>
 	<div class="wrapper collapse multi-collapse" aria-expanded="false" id="filterSidebar" style="margin-top: 10px;  min-height: calc(100vh-50px); position: absolute; width: 100%; z-index: 10">
 		<div class="col-md-12 col-lg-12" style="background-color: #f4f2f1; margin-top: -25px;">				

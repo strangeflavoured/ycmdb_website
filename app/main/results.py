@@ -60,8 +60,9 @@ def processResults(dataframe, selectionList=False, tableId="results_table"):
 	except KeyError:
 		pass
 
+
 	dataframe=dataframe.rename(columns=displayColumnNames)	
-	dataframe=dataframe.reindex(index=list(range(len(dataframe.index))))[1:]
+	dataframe.index=list(range(1,len(dataframe.index)+1))
 
 	dataframe = dataframe.to_html(escape=False, border = True, table_id=tableId, classes = ["table", "table-striped", "table-bordered", "table-hover", "table-fixed"])
 	return(dataframe+"<style>td{white-space:nowrap;} th{white-space:nowrap;}</style>")

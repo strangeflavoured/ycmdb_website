@@ -47,14 +47,21 @@ div.dataTables_filter {
 }
 
 .checkbox label {	
-	display: flex;
-	align-items: center;
+	display: inline-block;
+	align-items: bottom;
+}
+
+.checkbox label input{
+	margin-right: 5px;
 }
 
 .wrapper {
 	display: flex;
 }
 
+.dt-button-collection ul {
+	columns: 6;
+}
 /*.sidenav {
 	width: 160px;
 	position: fixed;

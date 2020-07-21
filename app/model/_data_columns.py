@@ -11,15 +11,15 @@ navigationTabs = {
 "metabolic":{"tables":["MET_Concentrations", "MET_EnzymeActivities", "MET_LipidAbundance", "MET_Secretion", "MET_Uptake"],
   "display":["Concentrations", "Enzyme Activities", "Lipid Abundance", "Secretion", "Uptake"], 
   "default":["Author_Year", "Strain_ID", "Medium_ID", "Numerical_Value", "Unit", "Value_Type", "Method"],
-  "order":[]},
+  },
 "proteomic":{"tables":["GEX_ProteinAbundance", "GEX_ProteinDegradation", "GEX_ProteinSynthesis", "GEX_TranslationEfficiencies", "GEX_mRNAAbundance", "GEX_mRNASynthesis"],
   "display":["Protein Abundance", "Protein Degradation", "Protein Synthesis", "Translation Efficiencies", "mRNA Abundance", "mRNA Synthesis"],
   "default":["Author_Year", "Strain_ID", "Medium_ID", "Numerical_Value", "Unit", "Value_Type", "Method"],
-  "order":[]},
+  },
 "biophysical":{"tables":["CDC_CCPhases", "General_CellDensity", "General_CellNumber", "General_CellSize", "General_DryWeight", "General_DryWeightComposition", "General_GrowthRates", "General_MacromoleculeAndOrganelleNumbers", "General_Yield", "VOL_BudIndex", "VOL_CellVolumes"],
   "display":["Cell Cycle Phases", "Cell Density", "Cell Number", "Cell Size", "Dry Weight", "Dry Weight Composition", "Growth Rates", "Organelles", "Yield", "Bud Index", "Cell Volumes"],
   "default":["Author_Year", "Strain_ID", "Medium_ID", "Numerical_Value", "Unit", "Value_Type", "Method"],
-  "order":[]}
+  }
 }
 
 primaryIdentifier={'CDC_CCPhases': ['Stress', 'Phase'], 
