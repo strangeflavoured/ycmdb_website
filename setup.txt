@@ -13,16 +13,25 @@ get installed packages and save them (if packages change)
 	pip freeze > requirements.txt
 
 update user db:
-	flask db init --multidb (if db does not exist)
+	flask db init --multidb (creates db if it does not exist)
 	flask db migrate -m "comment" (if changes in model/models.py were made)
 	flask db upgrade (if changes in model/models.py were made)
 
+Add .flaskenv
+Add directory DataUpload (in .) and get jquery-validation-1.19.2 (static)
 
 Finally, run app (development mode only)
 	flask run
+
+
 
 Production:
 decide on a production server configuration, e.g. gunicorn
 generate secret key:
 	python -c "import uuid; print(uuid.uuid4().hex)"
 replace sqlite with mysql using pymysql
+
+in .flaskenv:
+	remove FLASK_DEBUG=1
+	set up mail service
+	DATA_DB: use read-only account
