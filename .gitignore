@@ -5,10 +5,9 @@
 !/.gitignore
 
 *.pkl
-UpdateRELATIONcounters.*
+*.pyc
 
-__init__.pyc
+UpdateRELATIONcounters.out
 app.db
-migrations/
-DataUpload/
-jquery-validation-1.19.2/
+migrations
+DataUpload

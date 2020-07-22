@@ -27,7 +27,7 @@ def refreshContent():
 			if form.index.data:				
 				fig=generateNumOfEntriesPlot(navigationTabs)
 				StatsPlot=figureToSvg(fig).decode("utf-8")
-				svgFile=os.path.join(current_app.root_path, 'stats', 'DatabaseStats.svg')
+				svgFile=os.path.join(current_app.root_path, 'static', 'images', 'DatabaseStats.svg')
 				with open(svgFile, "w+") as file:
 					file.write(StatsPlot)
 				flash("Refreshed index stats", "info")
@@ -38,7 +38,7 @@ def refreshContent():
 			if form.count.data:
 				try:
 					with open(statsFolder+"/UpdateRELATIONcounters.out", "w+") as file:    	
-						subprocess.run([current_app.config["RSCRIPT"], "--vanilla", statsFolder+"/UpdateRELATIONcounters.R"], stdout=file, check=True)
+						subprocess.run([current_app.config["RSCRIPT"], "--vanilla", statsFolder+"/UpdateRELATIONcounters.R", current_app.config["DB_NAME"],  current_app.config["DB_HOST"],  current_app.config["DB_USER"],  current_app.config["DB_PASSWORD"]], stdout=file, check=True)
 					flash("Refreshed RELATION counts", "info")
 				except subprocess.CalledProcessError:
 					flash("RELATION counts could not be refreshed", "warning")

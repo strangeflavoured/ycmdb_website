@@ -17,8 +17,12 @@ update user db:
 	flask db migrate -m "comment" (if changes in model/models.py were made)
 	flask db upgrade (if changes in model/models.py were made)
 
-Add .flaskenv
-Add directory DataUpload (in .) and get jquery-validation-1.19.2 (static)
+In main directory
+	Add .flaskenv
+	Add directory DataUpload
+
+In app/stats
+	Add Medium.pkl, Publication.pkl
 
 Finally, run app (development mode only)
 	flask run

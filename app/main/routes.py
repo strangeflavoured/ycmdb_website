@@ -18,7 +18,7 @@ from app.stats.routes import ForMediumPlot, publicationStats
 @bp.route("/home")
 @bp.route('/index')
 def index():
-	with open(os.path.join(current_app.root_path, 'stats', 'DatabaseStats.svg'), "r") as file:
+	with open(os.path.join(current_app.root_path, 'static', 'images', 'DatabaseStats.svg'), "r") as file:
 		startSvg = file.read()
 	return render_template("main/index.html", title="YCMD", stats=startSvg, navigation=navigation, category=False, admin=userIsAdmin(), confirmed=userConfirmed())
 

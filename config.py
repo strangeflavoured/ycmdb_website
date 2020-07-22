@@ -15,11 +15,10 @@ class Config(object):
 	MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
 	MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 
-	MYSQL_HOST = os.environ.get("MYSQL_HOST")
-	MYSQL_USER = os.environ.get("MYSQL_USER")
-	MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD")
-	MYSQL_DB = os.environ.get("MYSQL_DB")
-	MYSQL_PORT = os.environ.get("MYSQL_PORT")
+	DB_NAME=os.environ.get("DB_NAME")
+	DB_HOST=os.environ.get("DB_HOST")
+	DB_USER=os.environ.get("DB_USER")
+	DB_PASSWORD=os.environ.get("DB_PASSWORD")
 
 	ADMINS = os.environ.get("ADMINS")
 	BASEDIR=basedir
