@@ -40,7 +40,7 @@ def Eval(expression, undefined="NaN"):
 	return val
 
 def highlightStrainInScheme(closestAncestor):
-	root=etree.parse("app/static/SchemeStrainsYCMDB.svg").getroot()
+	root=etree.parse("app/static/images/SchemeStrainsYCMDB.svg").getroot()
 	nsmap=root.nsmap.copy()
 	nsmap["xmlns"]=nsmap.pop(None)
 	node=root.xpath(f".//svg:text[svg:tspan='{closestAncestor.strip()}']", namespaces=nsmap)
