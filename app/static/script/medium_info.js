@@ -38,7 +38,7 @@ $('#medium_composition').DataTable({
 $('#compound').change(function(){
 	var URLparameter = window.location.href.split("#")[0];
 	var optionSelected = $("option:selected", this);
-		var valueSelected = this.value;
-		var newURL = replaceUrlParam(URLparameter, "compound", valueSelected)+"#medium_plot"
-		window.location.href = newURL;   			
+	var valueSelected = this.value;
+	var newURL = replaceUrlParam(URLparameter, "compound", valueSelected)+"#medium_plot"
+	window.location.href = newURL;   			
 });
