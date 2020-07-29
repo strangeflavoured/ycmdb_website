@@ -26,7 +26,7 @@ def index():
 def about():
 	return render_template("main/about.html", admin=userIsAdmin(), navigation=navigation, category="about", title="About Us", confirmed=userConfirmed())
 
-@bp.route('/data/<category>', methods=["GET","POST"])
+@bp.route('/data/<category>')
 def data(category):
 	parent=category.capitalize()+":"
 	title=category.capitalize()+" Data"
@@ -99,7 +99,7 @@ def media():
 	tableHtml=processResults(Media, tableId="meta_table")	
 	return render_template("main/meta.html", admin=userIsAdmin(), navigation=navigation, category="media", table=tableHtml, confirmed=userConfirmed())
 
-@bp.route("/medium", methods=["GET","POST"])
+@bp.route("/medium")
 def mediumInfo():	
 	mediumId=request.args.get("Name")
 	mediumMetaId=request.args.get("MediumID")
@@ -122,8 +122,7 @@ def mediumInfo():
 		Medium=pd.read_sql_query(f"select Component, PubChem, Value, Unit from META_MediumComposition where Medium_uniqueID='{mediumMetaId}'", db.get_engine(bind="data")).fillna("")
 		entries=pd.read_sql_query(f"select {', '.join(relTables)} from RELATION_Medium WHERE Medium_ID = '{mediumId}'", db.get_engine(bind="data")).fillna("")
 		
-		#print(Medium["Component"], file=sys.stdout)
-		#process data fro display
+		#process data for display
 		tableHtml=processResults(Medium, tableId="medium_composition")
 		entriesHtml=processRel(entries, tableId="medium_entries", searchId=mediumId)
 
